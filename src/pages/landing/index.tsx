@@ -4,7 +4,12 @@ import { Button } from '../../components/ui/button';
 import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  console.log(localStorage.getItem('user'));
+
+  const user = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))
+    : null;
+
   return (
     <div className='bg-[#202123] min-h-screen flex flex-col'>
       <header className='flex items-center p-4 gap-2'>

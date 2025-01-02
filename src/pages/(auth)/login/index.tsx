@@ -40,7 +40,7 @@ export default function LoginPage() {
     }
 
     if (resp.ok) {
-      window.location.href = '/';
+      window.location.href = '/login';
     }
   };
 
