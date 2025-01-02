@@ -11,13 +11,13 @@ import {
 } from '@/components/ui/select';
 import { API } from '@/lib/constant';
 import { useQuery } from '@tanstack/react-query';
-import { Send } from 'lucide-react';
+import { LoaderCircle, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function ChatBase() {
   const [message, setMessage] = useState('');
-  const [model, setModel] = useState('USGPT');
+  const [model, setModel] = useState();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const createChat = async () => {
@@ -28,11 +28,13 @@ export default function ChatBase() {
       },
       body: JSON.stringify({
         user_id: user._id,
-        model_id: '1',
+        model_id: model._id,
       }),
     });
-
     const chat = await resp.json();
+
+    navigate(`/chat/${chat._id}`);
+
     await fetch(`${API}/chatHistories`, {
       method: 'POST',
       headers: {
@@ -41,13 +43,11 @@ export default function ChatBase() {
       body: JSON.stringify({
         chat_id: chat._id,
         user_id: user._id,
-        model_id: model,
+        model_id: model._id,
         message,
         stream: false,
       }),
     });
-
-    navigate(`/chat/${chat._id}`);
   };
 
   const models = useQuery({
@@ -56,7 +56,10 @@ export default function ChatBase() {
       const resp = await fetch(`${API}/models`, {
         credentials: 'include',
       });
-      return await resp.json();
+
+      const data = await resp.json();
+      setModel(data[0]);
+      return data;
     },
   });
 
@@ -67,12 +70,16 @@ export default function ChatBase() {
           <SelectTrigger className='w-fit flex gap-2'>
             {/* biome-ignore lint/a11y/noLabelWithoutControl: no input */}
             <label className='text-[#9A9B9F]'>Select model</label>
-            <SelectValue placeholder='USGPT' defaultValue={model} />
+            <SelectValue
+              placeholder={
+                model?.model_name || <LoaderCircle className='animate-spin' />
+              }
+            />
           </SelectTrigger>
           <SelectContent>
             {models.isFetched &&
               models.data?.map((model: any) => (
-                <SelectItem key={model._id} value={model._id}>
+                <SelectItem key={model._id} value={model}>
                   {model.model_name}
                 </SelectItem>
               ))}

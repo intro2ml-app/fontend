@@ -1,24 +1,34 @@
 import Logo from '@/assets/logo.png';
 import Mascot from '@/assets/fitbot.png';
 import { Button } from '../../components/ui/button';
+import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   return (
     <div className='bg-[#202123] min-h-screen flex flex-col'>
       <header className='flex items-center p-4 gap-2'>
         <img src={Logo} alt='logo' className='w-16' />
         <p className='primary text-3xl font-semibold'>US-GPT</p>
-        <div className='flex ml-auto mr-10 items-center gap-6'>
-          <a href='/login' className='text-[#8ED5FF] text-xl'>
-            Đăng nhập
-          </a>
-          <a
-            href='/register'
-            className='text-[#202123] bg-[#8ED5FF] px-6 py-3 rounded-full text-xl'
-          >
-            Đăng ký
-          </a>
-        </div>
+        {user ? (
+          <div className='ml-auto'>
+            <Link to='/chat' className='text-[#8ED5FF] text-xl'>
+              Chats
+            </Link>
+          </div>
+        ) : (
+          <div className='flex ml-auto mr-10 items-center gap-6'>
+            <a href='/login' className='text-[#8ED5FF] text-xl'>
+              Đăng nhập
+            </a>
+            <a
+              href='/register'
+              className='text-[#202123] bg-[#8ED5FF] px-6 py-3 rounded-full text-xl'
+            >
+              Đăng ký
+            </a>
+          </div>
+        )}
       </header>
       <main className='flex gap-10 grow justify-center items-center text-white'>
         <div className='max-w-2xl'>
