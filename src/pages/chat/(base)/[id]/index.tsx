@@ -107,7 +107,7 @@ export default function ChatDetailPage() {
                 <ChatBubble
                   key={idx}
                   variant='sent'
-                  className='px-4 py-2 bg-[#8ED5FF] rounded-full text-[#202123] max-w-[75%]'
+                  className='px-4 py-2 bg-[#8ED5FF] rounded-lg text-[#202123] max-w-[75%]'
                 >
                   <MathRenderer text={chat.message} />
                 </ChatBubble>

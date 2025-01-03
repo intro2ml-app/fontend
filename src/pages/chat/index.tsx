@@ -28,24 +28,36 @@ export default function ChatPage() {
 
   return (
     <main className='flex min-h-screen'>
-      <nav className='flex flex-col bg-[#ECECF1] dark:bg-[#303137] w-[300px] px-2 pt-20'>
+      <nav className='flex flex-col bg-[#ECECF1] dark:bg-[#303137] w-[300px] px-2 pt-20 max-h-screen'>
         <Link to='/chat'>
           <Button className='bg-[#8ED5FF] hover:bg-[#8ED5FF] dark:bg-[#202123] dark:hover:bg-[#202123] hover:bg-opacity-80 w-full justify-start mb-8 text-black dark:text-white'>
             <SquarePen size={24} />
             Đoạn chat mới
           </Button>
         </Link>
-        <Separator className='bg-[#003F88] dark:bg-[#4C4D55] mb-8' />
-        <div className='flex flex-col gap-2 grow max-w-[250px] w-[250px]'>
+        <Separator className='bg-[#003F88] dark:bg-[#4C4D55] mb-4' />
+        <div
+          className='flex flex-col gap-2 grow max-w-[250px] w-[250px] overflow-scroll'
+          style={{
+            scrollbarWidth: 'none',
+          }}
+        >
           {chats.isFetched &&
-            chats.data?.map((chat: any) => (
-              <ChatPreview
-                key={chat._id}
-                id={chat._id}
-                title={chat.chat_name}
-                active={chat._id === chatId}
-              />
-            ))}
+            chats.data
+              ?.sort((a, b) => {
+                return (
+                  new Date(a.updatedAt).getTime() -
+                  new Date(b.updatedAt).getTime()
+                );
+              })
+              .map((chat: any) => (
+                <ChatPreview
+                  key={chat._id}
+                  id={chat._id}
+                  title={chat.chat_name}
+                  active={chat._id === chatId}
+                />
+              ))}
         </div>
         <Separator className='bg-[#003F88] dark:bg-[#4C4D55] mb-6' />
         <div className='flex flex-col gap-7 mb-8 text-[#003F88] dark:text-white font-medium'>

@@ -7,6 +7,7 @@ import 'katex/dist/katex.min.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 export default function MathRenderer({ text }: { text: string }) {
+  text = text.split('\n').join('\n\n');
   return (
     <div>
       <ReactMarkdown
