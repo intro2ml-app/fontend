@@ -15,10 +15,17 @@ import {
 import 'katex/dist/katex.min.css';
 import MathRenderer from '@/components/MathRenderer';
 import ModelSelector from '@/components/ModelSelector';
+import { ChatMessageList } from '@/components/ui/chat/chat-message-list';
+import {
+  ChatBubble,
+  ChatBubbleMessage,
+} from '@/components/ui/chat/chat-bubble';
 
 export default function ChatDetailPage() {
   const [message, setMessage] = useState('');
   const [model, setModel] = useState();
+  const [loading, setLoading] = useState(false);
+  const [chats, setChats] = useState([]);
   const chatId = useParams().id;
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -38,11 +45,14 @@ export default function ChatDetailPage() {
         (el) => el._id === data[data.length - 1].model_id
       );
       setModel(model);
+      setChats(data);
       return data;
     },
   });
 
   const addMessage = async () => {
+    setLoading(true);
+    setChats((prev) => [...chats, { message, response: '' }]);
     setMessage('');
     const formattedMsg = message.split('\n');
     const resp = await fetch(`${API}/chatHistories`, {
@@ -59,6 +69,7 @@ export default function ChatDetailPage() {
 
     const data = await resp.json();
     setModel(models.data.find((el) => el._id === data.model_id).model_name);
+    setLoading(false);
     queryClient.invalidateQueries({
       queryKey: ['chatHistories', { chat_id: chatId }],
     });
@@ -84,38 +95,32 @@ export default function ChatDetailPage() {
         }}
       >
         <div ref={containerRef} className='h-full'>
-          {chatHistories.isFetched ? (
-            chatHistories.data?.map((chatHistory: any) => (
-              <div key={`${chatHistory._id}_cover`}>
-                <div
-                  key={chatHistory._id}
-                  className='flex gap-4 items-center justify-end'
+          <ChatMessageList
+            ref={containerRef}
+            className='flex-1 overflow-scroll'
+            style={{
+              scrollbarWidth: 'none',
+            }}
+          >
+            {chats.map((chat, idx) => (
+              <>
+                <ChatBubble
+                  key={idx}
+                  variant='sent'
+                  className='px-4 py-2 bg-[#8ED5FF] rounded-full text-[#202123] max-w-[75%]'
                 >
-                  <p className='px-4 py-2 bg-[#8ED5FF] rounded-full text-[#202123] max-w-[75%]'>
-                    {chatHistory.message}
-                  </p>
-                  <img
-                    src='https://via.placeholder.com/150'
-                    alt='chat'
-                    width={50}
-                    className='rounded-full'
-                  />
-                </div>
-                <div
-                  key={`${chatHistory._id}_resp`}
-                  className='flex flex-row-reverse gap-4 items-center justify-end mt-4'
-                >
-                  <MathRenderer text={chatHistory.response as string} />
-                  <img
-                    src='https://via.placeholder.com/150'
-                    alt='chat'
-                    width={50}
-                    className='rounded-full'
-                  />
-                </div>
-              </div>
-            ))
-          ) : (
+                  <MathRenderer text={chat.message} />
+                </ChatBubble>
+                {chat.response && (
+                  <ChatBubble key={`${idx}_resp`} variant='received'>
+                    <MathRenderer text={chat.response} />
+                  </ChatBubble>
+                )}
+              </>
+            ))}
+            {loading && <ChatBubbleMessage isLoading />}
+          </ChatMessageList>
+          {!chatHistories.isFetched && (
             <LoaderCircle className='animate-spin mx-auto' />
           )}
         </div>
