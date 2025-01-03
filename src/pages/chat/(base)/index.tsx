@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { API } from '@/lib/constant';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { LoaderCircle, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ export default function ChatBase() {
   const [model, setModel] = useState();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const client = useQueryClient();
   const createChat = async () => {
     const resp = await fetch(`${API}/chats`, {
       method: 'POST',
@@ -34,6 +35,7 @@ export default function ChatBase() {
     const chat = await resp.json();
 
     navigate(`/chat/${chat._id}`);
+    client.invalidateQueries({ queryKey: ['chats'] });
 
     await fetch(`${API}/chatHistories`, {
       method: 'POST',

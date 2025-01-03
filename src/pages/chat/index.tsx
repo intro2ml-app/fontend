@@ -11,10 +11,11 @@ import {
   SquarePen,
   SunDim,
 } from 'lucide-react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 
 export default function ChatPage() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const chatId = useParams().id;
 
   const chats = useQuery({
     queryKey: ['chats'],
@@ -41,6 +42,7 @@ export default function ChatPage() {
                 key={chat._id}
                 id={chat._id}
                 title={chat.chat_name}
+                active={chat._id === chatId}
               />
             ))}
         </div>

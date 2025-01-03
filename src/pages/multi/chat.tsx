@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { LoaderCircle, Send } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { Chat } from '@/lib/utils';
+import ModelSelector from '@/components/ModelSelector';
 
 type ChatProps = {
   message: string;
@@ -84,31 +85,12 @@ export default function ChatComponent({
 
   return (
     <section className='relative w-1/2 h-full flex flex-col gap-10'>
-      <div>
-        <Select
-          onValueChange={(value) => {
-            setModel(value);
-            setChat([]);
-          }}
-        >
-          <SelectTrigger className='w-fit flex gap-2'>
-            {/* biome-ignore lint/a11y/noLabelWithoutControl: no input */}
-            <label className='text-[#9A9B9F]'>Select model</label>
-            <SelectValue
-              placeholder={
-                model?.model_name || <LoaderCircle className='animate-spin' />
-              }
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {models?.map((model: any) => (
-              <SelectItem key={model._id} value={model}>
-                {model.model_name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <ModelSelector
+        models={models}
+        model={model}
+        setModel={setModel}
+        setChat={setChat}
+      />
       <ChatMessageList
         ref={containerRef}
         className='flex-1 overflow-scroll'
