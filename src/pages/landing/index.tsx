@@ -51,7 +51,12 @@ export default function LandingPage() {
             Trợ lý thông minh hỗ trợ học tập, rèn luyện dành riêng cho sinh viên
             trường ĐH Khoa học tự nhiên, ĐHQG-HCM.
           </p>
-          <Button className='mt-12 rounded-full text-xl px-10 py-8 bg-[#8ED5FF] text-black hover:bg-[#8ED5FF] hover:bg-opacity-80'>
+          <Button
+            className='mt-12 rounded-full text-xl px-10 py-8 bg-[#8ED5FF] text-black hover:bg-[#8ED5FF] hover:bg-opacity-80'
+            onClick={() => {
+              window.location.href = '/login';
+            }}
+          >
             Bắt đầu ngay!
           </Button>
         </div>

@@ -1,3 +1,4 @@
+import ModelSelector from '@/components/ModelSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -68,25 +69,7 @@ export default function ChatBase() {
   return (
     <div className='flex flex-col h-full dark:text-white'>
       <div className='ml-10'>
-        <Select onValueChange={setModel}>
-          <SelectTrigger className='w-fit flex gap-2'>
-            {/* biome-ignore lint/a11y/noLabelWithoutControl: no input */}
-            <label className='text-[#9A9B9F]'>Select model</label>
-            <SelectValue
-              placeholder={
-                model?.model_name || <LoaderCircle className='animate-spin' />
-              }
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {models.isFetched &&
-              models.data?.map((model: any) => (
-                <SelectItem key={model._id} value={model}>
-                  {model.model_name}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
+        <ModelSelector models={models.data} model={model} setModel={setModel} />
       </div>
       <div className='w-full flex flex-col gap-10 items-center justify-center grow'>
         <h1 className='secondary dark:secondary-dark text-4xl font-medium py-2'>

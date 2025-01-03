@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import 'katex/dist/katex.min.css';
 import MathRenderer from '@/components/MathRenderer';
+import ModelSelector from '@/components/ModelSelector';
 
 export default function ChatDetailPage() {
   const [message, setMessage] = useState('');
@@ -75,27 +76,7 @@ export default function ChatDetailPage() {
 
   return (
     <div className='relative flex flex-col px-40 gap-10 h-full max-h-full overflow-hidden pt-4'>
-      <div>
-        <Select onValueChange={setModel}>
-          <SelectTrigger className='w-fit flex gap-2'>
-            {/* biome-ignore lint/a11y/noLabelWithoutControl: no input */}
-            <label className='text-[#9A9B9F]'>Select model</label>
-            <SelectValue
-              placeholder={
-                model?.model_name || <LoaderCircle className='animate-spin' />
-              }
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {models.isFetched &&
-              models.data?.map((model: any) => (
-                <SelectItem key={model._id} value={model}>
-                  {model.model_name}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <ModelSelector models={models.data} model={model} setModel={setModel} />
       <div
         className='flex-1 overflow-auto'
         style={{

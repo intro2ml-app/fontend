@@ -20,7 +20,7 @@ export default function MathRenderer({ text }: { text: string }) {
               <SyntaxHighlighter
                 {...rest}
                 PreTag='div'
-                children={String(children).replace(/\n$/, '')}
+                children={String(children)?.replace(/\n$/, '')}
                 language={match[1]}
               />
             ) : (
@@ -32,10 +32,10 @@ export default function MathRenderer({ text }: { text: string }) {
         }}
       >
         {text
-          .replace(/\\\(/g, '$')
-          .replace(/\\\)/g, '$')
-          .replace(/\\\[/g, '$$')
-          .replace(/\\]/g, '$$')}
+          ?.replace(/\\\(/g, '$')
+          ?.replace(/\\\)/g, '$')
+          ?.replace(/\\\[/g, '$$')
+          ?.replace(/\\]/g, '$$')}
       </ReactMarkdown>
     </div>
   );

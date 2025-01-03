@@ -9,6 +9,7 @@ import {
   LogOut,
   SquareArrowOutUpRight,
   SquarePen,
+  Sun,
   SunDim,
 } from 'lucide-react';
 import { Link, Outlet, useParams } from 'react-router-dom';
@@ -35,7 +36,7 @@ export default function ChatPage() {
           </Button>
         </Link>
         <Separator className='bg-[#003F88] dark:bg-[#4C4D55] mb-8' />
-        <div className='flex flex-col gap-2 grow'>
+        <div className='flex flex-col gap-2 grow max-w-[250px] w-[250px]'>
           {chats.isFetched &&
             chats.data?.map((chat: any) => (
               <ChatPreview
@@ -59,7 +60,7 @@ export default function ChatPage() {
               document.documentElement.classList.toggle('dark');
             }}
           >
-            <SunDim />
+            <Sun />
             Dark mode
           </Button>
           <Link to='/' className='flex gap-2'>

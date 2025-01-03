@@ -19,7 +19,7 @@ type ModelSelectorProps = {
   models: any;
   model: any;
   setModel: (model: any) => void;
-  setChat: (chat: any) => void;
+  setChat?: (chat: any) => void;
 };
 
 export default function ModelSelector({
@@ -36,7 +36,7 @@ export default function ModelSelector({
       <Select
         onValueChange={(value) => {
           setModel(value);
-          setChat([]);
+          if (setChat) setChat([]);
           setHover(false);
         }}
       >
@@ -49,12 +49,16 @@ export default function ModelSelector({
             }
           />
         </SelectTrigger>
-        <SelectContent onMouseLeave={() => setHover(false)}>
+        <SelectContent
+          onMouseLeave={() => setHover(false)}
+          onBlur={() => setHover(false)}
+        >
           {models?.map((model: any) => (
             <div key={model._id} className='relative'>
               <SelectItem
                 key={model._id}
                 value={model}
+                className='w-full'
                 onMouseOver={() => {
                   setHoverModel(model);
                   setHover(true);
@@ -67,7 +71,7 @@ export default function ModelSelector({
         </SelectContent>
       </Select>
       {hover && (
-        <div className='w-96 absolute z-[999] top-0 right-0 bg-[#F9F9F9] dark:bg-[#202123] p-2 rounded-md shadow-md'>
+        <div className='w-96 absolute z-[999] top-10 left-96 bg-[#F9F9F9] dark:bg-[#202123] p-2 rounded-md shadow-md'>
           <h3 className='capitalize text-lg'>
             {hoverModel?.model_name.split('-').join(' ')}
           </h3>
